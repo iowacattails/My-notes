@@ -1,6 +1,4 @@
-theme: jekyll-theme-merlot
-title: My Law Notes and Links
-description: Historical Law Books, Notes by Rob Logue
-logo: https://iowacattails.github.io/My-notes/law-scales.png
+theme: jekyll-theme-minimal
+title: Historical Law Book Links, Notes by Rob Logue
+description: Common-law research, affidavits, grand jury materials, and historical documents
 show_downloads: false
-google_analytics: 
