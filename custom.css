@@ -1,0 +1,22 @@
+/* Yellow legal-pad background like iPhone Notes */
+body {
+  background: repeating-linear-gradient(
+    #fff 0px,
+    #fff 23px,
+    #f9f1a5 24px,
+    #f9f1a5 25px
+  ) !important;
+  background-attachment: fixed;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* Smaller, cleaner header */
+h1 {
+  font-size: 1.6em !important;
+  margin: 0.5em 0 !important;
+}
+
+/* Remove all the unwanted footer text */
+footer, .footer, .site-footer {
+  display: none !important;
+}
