@@ -1,0 +1,43 @@
+name: Create Note
+
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: 'Title for the note (becomes part of the URL)'
+        required: true
+      body:
+        description: 'Full text of your note'
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create note file
+        run: |
+          SLUG="${{ inputs.title }}"
+          SLUG="${SLUG// /-}"
+          SLUG=$(echo "$SLUG" | tr '[:upper:]' '[:lower:]')
+          SLUG="${SLUG//[^a-z0-9-]/}"
+          DATE=$(date +%F)
+          FILE="$DATE-${SLUG}.md"
+
+          cat > "$FILE" << EOF
+          ---
+          title: ${{ inputs.title }}
+          date: $(date "+%B %d, %Y")
+          ---
+          ${{ inputs.body }}
+          EOF
+
+          git config user.name "iPhone Note"
+          git config user.email "iowacattails@users.noreply.github.com"
+          git add "$FILE"
+          git commit -m "Add note: ${{ inputs.title }}"
+          git push
+
+      - name: Done
+        run: echo "Note created!"
