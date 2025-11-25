@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Notes</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f9e8a8; /* classic iPhone notes yellow */
+      background-image: 
+        repeating-linear-gradient(
+          transparent 0px,
+          transparent 34px,
+          #e5c78e 34px,
+          #e5c78e 35px,
+          transparent 35px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          transparent 0px,
+          transparent 60px,
+          #d6863a 60px,
+          #d6863a 61px,
+          transparent 61px
+        );
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+    }
+    header {
+      background: #f9e8a8;
+      padding: 40px 20px;
+      text-align: center;
+      border-bottom: 2px solid #d6863a;
+    }
+    h1 {
+      margin: 0;
+      font-size: 48px;
+      color: #333;
+      font-weight: bold;
+    }
+    main {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    li {
+      margin: 12px 0;
+    }
+    a {
+      color: #d6863a;
+      text-decoration: none;
+      font-size: 24px;
+    }
+    a:hover { text-decoration: underline; }
+    .update {
+      text-align: center;
+      margin-top: 50px;
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Notes</h1>
+  </header>
+  <main>
+    <ul id="notes-list"></ul>
+    <div class="update" id="updated"></div>
+  </main>
+
+  <script>
+    // Automatically read every .md file in the repo and make a link
+    const list = document.getElementById("notes-list");
+    const updated = document.getElementById("updated");
+
+    // This free service gives us the list of all files in the repo
+    fetch("https://api.github.com/repos/iowacattails/My-notes/contents/")
+      .then(r => r.json())
+      .then(files => {
+        const notes = files
+          .filter(f => f.name.endsWith(".md") && f.name !== "README.md")
+          .sort((a,b) => a.name.localeCompare(b.name));  // alphabetical
+
+        if (notes.length === 0) {
+          list.innerHTML = "<li>No notes yet – just add .md files!</li>";
+          return;
+        }
+
+        notes.forEach(file => {
+          const li = document.createElement("li");
+          const a = document.createElement("a");
+          // Make nice title: "2024-11-24-my-grand-jury-note.md" → "2024-11-24 My Grand Jury Note"
+          let title = file.name.replace(".md", "").replace(/-/g, " ");
+          title = title.charAt(0).toUpperCase() + title.slice(1);
+          a.href = file.name;
+          a.textContent = title;
+          li.appendChild(a);
+          list.appendChild(li);
+        });
+
+        // Show last update time
+        const latest = notes[notes.length-1];
+        updated.textContent = "Last updated: " + new Date().toLocaleDateString();
+      });
+  </script>
+</body>
+</html>
